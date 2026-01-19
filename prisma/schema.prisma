@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+////////////////////////////////
+enum UserState {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum ReferralState {
+  PENDING
+  ACTIVE
+  REJECTED
+}
+
+enum CommissionState {
+  PENDING
+  PAID
+  CANCELLED
+}
+///////////////////////////////
+
+model User {
+  id Int @id @default(autoincrement())
+  //
+  referrals Referral[]@relation("referrals")
+
+  referredUser Referral?
+
+  commissions Commission[]
+  //
+  email String @unique
+  password String
+  username String @unique
+  state UserState @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+}
+
+model Referral {
+  id Int @id @default(autoincrement())
+  //
+  referredUser User? @relation(fields: [referredId], references: [id])
+
+  referrerUser User @relation("referrals", fields: [referrerId], references: [id])
+
+  parent Referral? @relation("ReferralParent", fields: [parentId], references: [id])
+  referral Referral[] @relation("ReferralParent")
+
+  ancestors Tree[] @relation("TreeAncestor")
+
+  descendants Tree[] @relation("TreeDescendant")
+
+  commissions Commission[]
+  //
+  name String
+  identification String
+  phone String
+  address String
+  email String @unique
+  state ReferralState @default(PENDING)
+  referrerId Int
+  referredId Int? @unique
+  parentId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+}
+
+model Tree {
+  //
+  ancestor Referral @relation("TreeAncestor", fields: [ancestorId], references: [id])
+  descendant Referral @relation("TreeDescendant", fields: [descendantId], references: [id])
+  //
+  ancestorId Int
+  descendantId Int
+  depth Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([ancestorId, descendantId])
+}
+model Commission {
+  id Int @id @default(autoincrement())
+  //
+  user User @relation(fields: [userId], references: [id])
+  referral Referral @relation(fields: [referralId], references: [id])
+  //
+  userId Int
+  referralId Int
+  state CommissionState @default(PENDING)
+  percentage Decimal @db.Decimal(5,2)
+  amount Decimal @db.Decimal(10,2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+}
