@@ -36,27 +36,38 @@ enum CommissionState {
 model User {
   id Int @id @default(autoincrement())
   //
-  referrals Referral[]@relation("referrals")
-
   referredUser Referral?
 
   commissions Commission[]
+
+  emailVerification EmailVerification[]
   //
   email String @unique
   password String
   username String @unique
+  emailVerified Boolean @default(false)
   state UserState @default(ACTIVE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
 }
 
+model EmailVerification{
+  id Int @id @default(autoincrement())
+  //
+  user User @relation(fields: [userId], references: [id])
+  //
+  userId Int
+  token String
+  expiresAt DateTime
+  used Boolean
+  createdAt DateTime @default(now())
+}
+
 model Referral {
   id Int @id @default(autoincrement())
   //
   referredUser User? @relation(fields: [referredId], references: [id])
-
-  referrerUser User @relation("referrals", fields: [referrerId], references: [id])
 
   parent Referral? @relation("ReferralParent", fields: [parentId], references: [id])
   referral Referral[] @relation("ReferralParent")
@@ -69,11 +80,10 @@ model Referral {
   //
   name String
   identification String
-  phone String
+  phone String @unique
   address String
   email String @unique
   state ReferralState @default(PENDING)
-  referrerId Int
   referredId Int? @unique
   parentId Int?
   createdAt DateTime @default(now())
@@ -94,6 +104,7 @@ model Tree {
 
   @@id([ancestorId, descendantId])
 }
+
 model Commission {
   id Int @id @default(autoincrement())
   //

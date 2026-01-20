@@ -1,22 +1,15 @@
 import db from "@/libs/db"
 import { NextResponse } from "next/server";
-import {getServerSession} from 'next-auth/next'
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { session } from "@/libs/auth";
 
 export async function POST(request){
 
     try{
-        const session =await getServerSession(
-            authOptions
-        )
+        const user = await session()
+
+        const {email} = user.user
 
         const data = await request.json();
-
-        const referralFoundByIdentification = await db.referral.findFirst({
-            where: {
-                identification: data.identification
-            }
-        })
 
         const referralFoundByEmail = await db.referral.findFirst({
             where:{
@@ -30,16 +23,7 @@ export async function POST(request){
             }        
         })
 
-        const parentId = await db.referral.findFirst({
-            where:{
-                email: session.user.email
-            },
-            select:{
-                id: true
-            }
-        })
-
-        const userID = await db.user.findFirst({
+        const referralUserId = await db.user.findFirst({
             where:{
                 email: data.email
             },
@@ -47,15 +31,23 @@ export async function POST(request){
                 id: true
             }
         })
+
+        const referralId = await db.referral.findFirst({
+            where:{
+                email: email
+            },
+            select:{
+                id: true
+            }
+        })
         
-        if(referralFoundByIdentification){
-            return NextResponse.json({error: "La identificación ya está en uso"}, {status: 409})
-        }if(referralFoundByEmail){
+        if(referralFoundByEmail){
             return NextResponse.json({error: "El correo electrónico ya está registrado"}, {status: 409})
         }if(referralFoundByPhone){
             return NextResponse.json({error: "El  número de telefono ya está registrado"}, {status: 409})
         }
-        if(!parentId && session.user.email != data.email) {
+
+        if(referralId == null && email != data.email) {
             return NextResponse.json({error: "Aun no ingresas tus datos"}, {status: 409})
         }
 
@@ -66,12 +58,23 @@ export async function POST(request){
                 phone: data.phone,
                 address: data.address,
                 email: data.email,
-                referrerId: parseInt("1"),
-                referredId: parseInt(userID?.id) ?? null,
-                parentId: parseInt(parentId?.id) ?? null
+                referredId: parseInt(referralUserId?.id) ?? null,
+                parentId: parseInt(referralId?.id) ?? null
             }
         })
-        console.log(newReferral)
+        const newReferralId = parseInt(newReferral.id)
+        const newTreeFirstRegister = await db.tree.create({
+            data:{
+                ancestorId: newReferralId,
+                descendantId: newReferralId,
+                depth: 0
+            }
+        })
+        if(referralId != null){
+            const newTreeRegister = await db.$executeRaw`INSERT INTO "Tree" ("ancestorId", "descendantId", "depth", "updatedAt") SELECT "ancestorId", ${newReferralId} , depth+1, ${new Date()} FROM "Tree" WHERE "descendantId"=${parseInt(referralId.id)}`
+        }
+        
+
         return NextResponse.json(newReferral)
     }catch(error){
         return NextResponse.json({ message: error.message },{ status: 500 })
@@ -80,17 +83,18 @@ export async function POST(request){
 
 export async function GET(request){
     try{
-        const session =await getServerSession(
-            authOptions
-        )
+        const user = await session()
+        const {email} = user.user
+
         const referralId = await db.referral.findFirst({
             where:{
-                email: session.user.email
+                email: email
             },
             select:{
                 id: true
             }
         })
+
         if(!referralId){
             return NextResponse.json({message : "Referral not found"},{ status: 500 })
         }

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import db from "@/libs/db"
+import crypto from "crypto";
+import { sendVerificationMail } from "@/libs/mail";
 
 export async function POST(request) {
     try{
@@ -18,6 +20,12 @@ export async function POST(request) {
             }        
         })
 
+        const referralFoundByEmail = await db.referral.findUnique({
+            where:{
+                email: data.email
+            }
+        })
+
         if(userFoundByUsername){
             return NextResponse.json({error: "El nombre de usuario ya está en uso"}, {status: 409})
         }if(userFoundByEmail){
@@ -33,6 +41,33 @@ export async function POST(request) {
                 password: hashedPassword
             }
         })
+
+        if(newUser){
+            const token = crypto.randomBytes(32).toString("hex");
+
+            const verify = await db.emailVerification.create({
+                data:{
+                    userId: newUser.id,
+                    token: token,
+                    expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+                    used: false
+                }
+            })
+            const link = `http://localhost:3000/verify-email?token=${token}`;
+            const res = await sendVerificationMail(data.email, link);
+
+            if(referralFoundByEmail){
+                await db.referral.update({
+                    where:{
+                        email: data.email
+                    },
+                    data:{
+                        referredId: parseInt(newUser.id)
+                    }
+                })
+            }
+        }
+
         const {password: _, ...user} = newUser
         return NextResponse.json(user)
     }catch(error){

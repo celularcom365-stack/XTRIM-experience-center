@@ -1,8 +1,13 @@
 import Content from "../Content/page"
+import clsx from "clsx"
 
-function Overlay({ onClose }){
+function Overlay({ open, onClose }){
     return(
-        <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center">
+        <div className={clsx(
+        "fixed inset-0 z-50 flex items-center justify-center bg-black/40",
+        "transition-opacity duration-300",
+        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      )}>
             <Content onClose={onClose} />
         </div>
     )

@@ -19,18 +19,42 @@ export const authOptions = {
                         email: credentials.email
                     }
                 })
+                const referralFound = await db.referral.findFirst({
+                    where:{
+                        referredId: userFound.id
+                    }
+                })
                 if(!userFound) throw new Error(JSON.stringify({message: 'Usuario no encontrado'}))
                 const passwordMatch = await bcrypt.compare(credentials.password, userFound.password)
                 if(!passwordMatch) throw new Error(JSON.stringify({message: 'Contraseña incorrecta'}))
+                if(!userFound.emailVerified) throw new Error(JSON.stringify({message: 'Usuario no verificado'}))
                 
                 return {
                     id: userFound.id,
                     name: userFound.username,
-                    email: userFound.email
+                    email: userFound.email,
+                    referral: referralFound?.id ?? null
                 }
             }
         })
     ],
+    callbacks:{
+        async jwt({ token, user }) {
+        // Se ejecuta SOLO al iniciar sesión
+        if (user) {
+            token.id = user.id
+            token.referralId = user.referralId
+        }
+        return token
+        },
+
+        async session({ session, token }) {
+        // Esto es lo que llega al frontend y backend
+        session.user.id = token.id
+        session.user.referralId = token.referralId
+        return session
+        }
+    },
     pages:{
         signIn: "/auth/login"
     }
