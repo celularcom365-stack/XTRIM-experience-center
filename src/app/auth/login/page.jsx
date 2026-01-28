@@ -12,8 +12,11 @@ function LoginPage() {
     const router = useRouter()
 
     const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const onSubmit = handleSubmit(async (data) => {
+        setLoading(true)
+
         const res = await signIn("credentials", {
             email: data.email,
             password: data.password,
@@ -22,20 +25,22 @@ function LoginPage() {
         console.log(res.error)
         if(!res.ok){
             setError(JSON.parse(res.error).message)
+            setLoading(false)
         }else{
+            setLoading(false)
             router.push('/dashboard')
             router.refresh()
         }
     })
 
     return(
-        <div className='h-[calc(100vh-7rem)] flex justify-center items-center'>
-            <form className="w-1/4" onSubmit={onSubmit}>
+        <div className='min-h-screen flex items-center justify-center px-4'>
+            <form className="w-full max-w-md px-4 sm:px-6 md:px-0" onSubmit={onSubmit}>
                 {error && (
                     <p className='bg-red-500 text-lg text-white p-3'>{error}</p>
                 )}
 
-                <h1 className="text-slate-200 font-bold text-4xl mb-4">Ingreso</h1>
+                <h1 className="text-slate-200 font-bold text-3xl sm:text-4xl mb-4">Ingreso</h1>
                 <label htmlFor="email" className='text-slate-200 mb-2 block text-sm'>Correo Electrónico:</label>
                 <input type="email"
                 {...register("email",{
@@ -44,7 +49,7 @@ function LoginPage() {
                         message: "* El correo electrónico es obligatorio"
                     }
                 })}
-                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full"
+                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
                 placeholder='usuario@correo.com'
                 />
                 {
@@ -62,7 +67,7 @@ function LoginPage() {
                         message: "* La contraseña es obligatoria"
                     }
                 })}
-                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full"
+                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
                 placeholder='********'
                 />
                 {
@@ -74,7 +79,15 @@ function LoginPage() {
                 }
                 <p className='text-sm text-white font-light'><Link href="/recover-password/">Olvidaste la contraseña?</Link></p>
                 
-                <button className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-2'>Ingresar</button>
+                {
+                    loading ? (
+                        <div className="flex justify-center mb-3">
+                            <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ):(
+                        <button className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-4 text-base active:scale-95 transition'>Ingresar</button>
+                    )
+                }
             </form>
         </div>
     )
