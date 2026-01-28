@@ -4,8 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+ENV DATABASE_URL="postgresql://fake:fake@localhost:5432/fake"
 
 RUN npx prisma generate
 RUN npm run build
