@@ -25,7 +25,7 @@ function Referral({referrals}){
                                         </button>
                                         
                                         <div className="">
-                                            <img src="https://i.pravatar.cc/100" className="w-14 h-14 rounded-full object-cover" />
+                                            <img src="/sidebar/xtrim.png" className="w-14 h-14 rounded-full object-cover" />
 
                                         </div>
                                         <div className="">

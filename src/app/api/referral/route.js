@@ -108,7 +108,7 @@ export async function GET(request){
         })
 
         if(!referralId){
-            return NextResponse.json({message : "Referral not found"},{ status: 500 })
+            return NextResponse.json({message : "Referral not found", email},{ status: 500 })
         }
         return NextResponse.json(referralId)
     }catch(error){

@@ -12,13 +12,14 @@ function Dashboard({children}) {
 
     return (
         <AuthProvider>
-            <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3">
+            <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 lg:pl-72">
                 <button
                 className="lg:hidden bg-white p-2 rounded-md shadow"
                 onClick={() => setSidebarOpen(true)}
                 >
                 <Menu />
                 </button>
+                <div className="hidden lg:block flex-1" />
                 <button className="bg-amber-400 font-semibold px-4 py-2 rounded-md mt-2" onClick={signOut}>Salir</button>
             </div>
 

@@ -40,7 +40,7 @@ function Sidebar({ open, setOpen }) {
                 </button>
             </div>
             <div className="flex justify-center">
-                <img src="https://media.licdn.com/dms/image/v2/D4E0BAQGyTnqsUojN6g/company-logo_200_200/company-logo_200_200/0/1685364905406/xtrimecuador_logo?e=2147483647&v=beta&t=ndCIiRnYhxiaCi9_wlP1tX0d7KzoCyLAYJmYcHwGGBE" className="w-20 h-20 rounded-full object-cover" />
+                <img src="/sidebar/xtrim.png" className="w-20 h-20 rounded-full object-cover" />
             </div>
             <div className="mt-2 text-center h-12 flex flex-col justify-center">
             {session ? (
