@@ -2,35 +2,64 @@ import Link from 'next/link'
 import {usePathname} from "next/navigation"
 import { useSession } from "next-auth/react"
 import clsx from "clsx"
+import { X, Menu } from "lucide-react"
 
-function Sidebar() {
+function Sidebar({ open, setOpen }) {
 
     const { data: session, status } = useSession()
 
     const pathname = usePathname()
 
-    const linkClass = (path) => 
-    `block px-3 py-2 rounded-md mt-2
-     ${pathname === path
-       ? "bg-fuchsia-800 text-white font-semibold"
-       : "text-white hover:bg-fuchsia-600"
-     }`
-
+    const linkClass = (path) =>
+        clsx(
+            "block px-3 py-2 rounded-md mt-2",
+            "transition-all duration-200 ease-in-out",
+            "hover:bg-fuchsia-600",
+            pathname === path
+            ? "bg-fuchsia-800 text-white"
+            : "text-white"
+        )
     return(
+        <>
+        {open && (
+            <div
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+            onClick={() => setOpen(false)}
+            />
+        )}
         <aside className={clsx(
-        "bg-fuchsia-900 text-white py-10 px-6 w-64",
-        "transition-all duration-300 ease-out",
-        status === "loading"
-            ? "-translate-x-full opacity-0"
-            : "translate-x-0 opacity-100"
+        "fixed pt-5 lg:static z-50",
+          "h-full w-64 bg-fuchsia-900 text-white",
+          "transition-transform duration-300 ease-out",
+          open ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0"
         )}>
+            <div className="flex justify-between items-center px-4 lg:hidden">
+                <button onClick={() => setOpen(false)}>
+                    <X />
+                </button>
+            </div>
             <div className="flex justify-center">
                 <img src="https://media.licdn.com/dms/image/v2/D4E0BAQGyTnqsUojN6g/company-logo_200_200/company-logo_200_200/0/1685364905406/xtrimecuador_logo?e=2147483647&v=beta&t=ndCIiRnYhxiaCi9_wlP1tX0d7KzoCyLAYJmYcHwGGBE" className="w-20 h-20 rounded-full object-cover" />
             </div>
-            <div className="mt-2 text-center">
-                <p className="text-white font-bold">{session?.user?.name}</p>
-                <p className="text-sm text-white">{session?.user?.email}</p>
+            <div className="mt-2 text-center h-12 flex flex-col justify-center">
+            {session ? (
+                <>
+                <p className="text-white font-bold truncate">
+                    {session.user?.name}
+                </p>
+                <p className="text-sm text-white truncate">
+                    {session.user?.email}
+                </p>
+                </>
+            ) : (
+                <>
+                <div className="h-4 w-32 mx-auto bg-white/20 rounded animate-pulse" />
+                <div className="h-3 w-40 mx-auto mt-1 bg-white/10 rounded animate-pulse" />
+                </>
+            )}
             </div>
+
             <nav className="mt-10 space-y-4">
                 <ul>
                     <li className="mt-2">
@@ -45,6 +74,7 @@ function Sidebar() {
                 </ul>
             </nav>
         </aside>
+        </>
     )
 }
 

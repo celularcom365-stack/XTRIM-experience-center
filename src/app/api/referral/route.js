@@ -1,6 +1,8 @@
 import db from "@/libs/db"
 import { NextResponse } from "next/server";
 import { session } from "@/libs/auth";
+import { verify } from "@/libs/identification"
+import { verifyPhone } from "@/libs/phone";
 
 export async function POST(request){
 
@@ -11,17 +13,45 @@ export async function POST(request){
 
         const data = await request.json();
 
+        const referralId = await db.referral.findFirst({
+            where:{
+                email: email
+            },
+            select:{
+                id: true
+            }
+        })
+        if(referralId == null && email != data.email) {
+            return NextResponse.json({message: "Aun no ingresas tus datos", type:"error"}, {status: 409})
+        }
+
         const referralFoundByEmail = await db.referral.findFirst({
             where:{
                 email: data.email
             }        
         })
+        if(referralFoundByEmail){
+            return NextResponse.json({message: "El correo electrónico ya está registrado", type:"error"}, {status: 409})
+        }
+
+        const trueECIdentification = verify(data.identification)
+        if(!trueECIdentification){
+            return NextResponse.json({message: "No es una cedula ecuatoriana", type:"error"}, {status: 409})
+        }
 
         const referralFoundByPhone = await db.referral.findFirst({
             where:{
                 phone: data.phone
             }        
         })
+        if(referralFoundByPhone){
+            return NextResponse.json({message: "El  número de telefono ya está registrado", type:"error"}, {status: 409})
+        }
+
+        const trueECPhone = verifyPhone(data.phone)
+        if(!trueECPhone){
+            return NextResponse.json({message: "No es un telefono válido", type:"error"}, {status: 409})
+        }
 
         const referralUserId = await db.user.findFirst({
             where:{
@@ -32,31 +62,13 @@ export async function POST(request){
             }
         })
 
-        const referralId = await db.referral.findFirst({
-            where:{
-                email: email
-            },
-            select:{
-                id: true
-            }
-        })
-        
-        if(referralFoundByEmail){
-            return NextResponse.json({error: "El correo electrónico ya está registrado"}, {status: 409})
-        }if(referralFoundByPhone){
-            return NextResponse.json({error: "El  número de telefono ya está registrado"}, {status: 409})
-        }
-
-        if(referralId == null && email != data.email) {
-            return NextResponse.json({error: "Aun no ingresas tus datos"}, {status: 409})
-        }
-
         const newReferral = await db.referral.create({
             data: {
                 name: data.name,
                 identification: data.identification,
                 phone: data.phone,
-                address: data.address,
+                latitude: (data.lat).toString(),
+                longitude: (data.lng).toString(),
                 email: data.email,
                 referredId: parseInt(referralUserId?.id) ?? null,
                 parentId: parseInt(referralId?.id) ?? null
@@ -74,8 +86,8 @@ export async function POST(request){
             const newTreeRegister = await db.$executeRaw`INSERT INTO "Tree" ("ancestorId", "descendantId", "depth", "updatedAt") SELECT "ancestorId", ${newReferralId} , depth+1, ${new Date()} FROM "Tree" WHERE "descendantId"=${parseInt(referralId.id)}`
         }
         
-
-        return NextResponse.json(newReferral)
+        
+        return NextResponse.json({message: "Creado Exitosamente", type:"success"}, {status:201})
     }catch(error){
         return NextResponse.json({ message: error.message },{ status: 500 })
     }

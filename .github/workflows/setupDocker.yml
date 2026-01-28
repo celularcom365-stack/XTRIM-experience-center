@@ -1,0 +1,55 @@
+name: Docker Setup & Update & Run new images
+
+on:
+  workflow_call:
+    secrets:
+      docker_username:
+        required: true
+      ec2_host:
+        required: true
+      ec2_key:
+        required: true
+      repository_name:
+        required: true
+
+jobs:
+  connect_update:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: SSH into EC2 and Deploy Application
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.ec2_host }}
+        username: ubuntu
+        key: ${{ secrets.ec2_key }}
+        script: |
+          if ! command -v docker &> /dev/null; then
+            sudo apt update
+            sudo apt install -y docker.io
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -aG docker $USER
+            sudo systemctl restart docker
+            sudo apt install docker-compose -y
+          else
+            echo "Docker ya está instalado."
+          fi
+
+          if ! sudo systemctl is-active --quiet docker; then
+            sudo systemctl start docker
+          fi  
+
+          cd /home/ubuntu
+
+          sudo docker pull ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest
+
+          CONTAINER_ID=$(docker ps -q --filter "name=${{ secrets.repository_name }}")
+          if [ -n "$CONTAINER_ID" ]; then
+            docker stop $CONTAINER_ID
+            docker rm $CONTAINER_ID
+          fi
+          sudo docker run -d --name ${{ secrets.repository_name }} --env-file /home/ubuntu/.env -p 3000:3000 ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest

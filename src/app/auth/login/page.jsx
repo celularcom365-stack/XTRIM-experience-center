@@ -4,6 +4,7 @@ import {useForm} from 'react-hook-form';
 import {signIn} from "next-auth/react";
 import {useRouter} from 'next/navigation'
 import { useState } from 'react'
+import Link from 'next/link';
 
 function LoginPage() {
     const {register, handleSubmit, formState:{errors}} = useForm()
@@ -12,12 +13,13 @@ function LoginPage() {
 
     const [error, setError] = useState(null)
 
-    const onSubmit = handleSubmit(async data => {
+    const onSubmit = handleSubmit(async (data) => {
         const res = await signIn("credentials", {
             email: data.email,
             password: data.password,
             redirect: false
         })
+        console.log(res.error)
         if(!res.ok){
             setError(JSON.parse(res.error).message)
         }else{
@@ -70,6 +72,8 @@ function LoginPage() {
                         </span>
                     )
                 }
+                <p className='text-sm text-white font-light'><Link href="/recover-password/">Olvidaste la contraseña?</Link></p>
+                
                 <button className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-2'>Ingresar</button>
             </form>
         </div>

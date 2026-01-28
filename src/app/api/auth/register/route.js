@@ -27,9 +27,9 @@ export async function POST(request) {
         })
 
         if(userFoundByUsername){
-            return NextResponse.json({error: "El nombre de usuario ya está en uso"}, {status: 409})
+            return NextResponse.json({message: "El nombre de usuario ya está en uso", type: "error"}, {status: 409})
         }if(userFoundByEmail){
-            return NextResponse.json({error: "El correo electrónico ya está registrado"}, {status: 409})
+            return NextResponse.json({message: "El correo electrónico ya está registrado", type: "error"}, {status: 409})
         }
 
         const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -54,7 +54,14 @@ export async function POST(request) {
                 }
             })
             const link = `http://localhost:3000/verify-email?token=${token}`;
-            const res = await sendVerificationMail(data.email, link);
+            const message = `
+            <h1>Hola 👋</h1>
+            <p>Gracias por registrarte</p>
+            <p>Haz clic en el siguiente enlace para confirmar tu email:</p>
+            <a href="${link}">Confirmar cuenta</a>
+            <p>Este enlace expira en 1 hora</p>
+            `
+            const res = await sendVerificationMail(data.email, link, message);
 
             if(referralFoundByEmail){
                 await db.referral.update({
@@ -69,7 +76,7 @@ export async function POST(request) {
         }
 
         const {password: _, ...user} = newUser
-        return NextResponse.json(user)
+        return NextResponse.json({message: "Usuario creado exitosamente", type: "success"}, {status:201})
     }catch(error){
         return NextResponse.json({message: error.message}, {status: 500})
     }

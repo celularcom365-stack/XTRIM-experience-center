@@ -1,6 +1,6 @@
 function Content({ onClose }){
     return(
-        <div className="bg-white rounded-xl p-6 w-full max-w-md z-50">
+        <div className="bg-white rounded-xl p-6 w-full max-w-md z-700">
             <h2 className="text-xl font-semibold mb-4">Aviso</h2>
 
             <p className="text-gray-700 mb-6">

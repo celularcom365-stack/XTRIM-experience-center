@@ -3,3 +3,6 @@
 body {
     @apply bg-fuchsia-900;
 }
+.leaflet-container {
+  z-index: 0 !important;
+}

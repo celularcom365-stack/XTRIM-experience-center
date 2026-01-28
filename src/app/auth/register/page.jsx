@@ -5,13 +5,16 @@ import { useState } from 'react'
 
 function RegisterPage() {
     const {register, handleSubmit, formState: {errors}} = useForm();
-    const [error, setError] = useState(null)
+    const [alert, setAlert] = useState(null);
+    const [loading, setLoading] = useState(false)
     const router = useRouter();
 
     const onSubmit = handleSubmit(async (data)=> {
+        setAlert(null)
+        setLoading(true)
 
         if(data.password != data.confirmPassword){
-            return alert("Las contraseñas no coinciden");
+           return setAlert({message: "Las contraseñas no coinciden", type:"error"})
         }
 
         const res = await fetch('/api/auth/register',{
@@ -25,11 +28,14 @@ function RegisterPage() {
                 'Content-Type': 'application/json'
             }
         })
-
-        if(res.ok){
-            router.push('/auth/login');
-        }else{
-            setError(JSON.parse(res.error).message)
+        const resJSON = await res.json()
+        if(resJSON.message){
+            setAlert(resJSON)
+            setLoading(false)
+        }if(res.ok){
+            setTimeout(()=>{
+                router.push('/auth/login');
+            }, 2000)
         }
     })
 
@@ -37,8 +43,8 @@ function RegisterPage() {
         <div className='h-[calc(100vh-7rem)] flex justify-center items-center'>
             <form className="w-1/4" onSubmit={onSubmit}>
 
-                {error && (
-                    <p className='bg-red-500 text-lg text-white p-3'>{error}</p>
+                {alert && (
+                    <p className={`text-white ${alert.type == "success" ? "bg-fuchsia-700" : "bg-red-500"} text-lg p-3`}>{alert.message}</p>
                 )}
 
                 <h1 className="text-slate-200 font-bold text-4xl mb-4">Registro</h1>
@@ -114,10 +120,12 @@ function RegisterPage() {
                         </span>
                     )
                 }
-                <button
+                {loading?(<div className="flex justify-center mb-3">
+                    <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>):(<button
                 className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-2'>
                     Registrarse
-                </button>
+                </button>)}
             </form>
         </div>
     )

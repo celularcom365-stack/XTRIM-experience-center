@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-export async function sendVerificationMail(to, link){
+export async function sendVerificationMail(to, link, message){
     try{
         const transporter = nodemailer.createTransport({
             host: "mail.celularcom.net",
@@ -15,16 +15,9 @@ export async function sendVerificationMail(to, link){
         const res = await transporter.sendMail({
             from: `"Club XTRIM" <p.mendez@celularcom.net>`,
             to,
-            subject: "Confirma tu cuenta",
-            html: `
-            <h1>Hola 👋</h1>
-            <p>Gracias por registrarte</p>
-            <p>Haz clic en el siguiente enlace para confirmar tu email:</p>
-            <a href="${link}">Confirmar cuenta</a>
-            <p>Este enlace expira en 1 hora</p>
-            `
+            subject: "Info cuenta",
+            html: message
         });
-        console.log(res)
     }catch(error){
         console.log(error)
     }

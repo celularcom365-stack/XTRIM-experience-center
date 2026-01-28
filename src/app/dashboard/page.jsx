@@ -28,10 +28,10 @@ function DashboardPage(){
         <>
         <Dashboard>
             {loading ? (
-                <div className="p-10">Cargando...</div>
+                <div className="">Cargando...</div>
             ):(
-                <main className="flex-1 m-10 bg-white rounded-xl">
-                    <div className="h-full overflow-y-auto p-10">
+                <main className="flex-1 bg-white rounded-xl">
+                    <div className="h-full overflow-y-auto ">
                         <div className="mb-8">
                             <h1 className="text-2xl font-semibold">Referidos</h1>
                             <p className="text-sm text-gray-900">fecha</p>

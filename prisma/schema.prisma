@@ -14,6 +14,20 @@ datasource db {
 }
 
 ////////////////////////////////
+
+enum BonusType {
+  WELCOME
+  ANNIVERSARY
+  REWARD
+}
+
+enum BonusState {
+  PENDING
+  GRANTED
+  PAID
+  CANCELLED
+}
+
 enum UserState {
   ACTIVE
   INACTIVE
@@ -37,8 +51,6 @@ model User {
   id Int @id @default(autoincrement())
   //
   referredUser Referral?
-
-  commissions Commission[]
 
   emailVerification EmailVerification[]
   //
@@ -76,12 +88,18 @@ model Referral {
 
   descendants Tree[] @relation("TreeDescendant")
 
-  commissions Commission[]
+  commissions Commission[] @relation("beneficiary")
+
+  commission Commission[] @relation("referral")
+
+  bonus Bonus[]
+
   //
   name String
   identification String
   phone String @unique
-  address String
+  latitude String
+  longitude String
   email String @unique
   state ReferralState @default(PENDING)
   referredId Int? @unique
@@ -108,15 +126,35 @@ model Tree {
 model Commission {
   id Int @id @default(autoincrement())
   //
-  user User @relation(fields: [userId], references: [id])
-  referral Referral @relation(fields: [referralId], references: [id])
+  referral Referral @relation("referral",fields: [referralId], references: [id])
+  beneficiary Referral @relation("beneficiary", fields: [beneficiaryId], references: [id])
   //
-  userId Int
   referralId Int
+  beneficiaryId Int
   state CommissionState @default(PENDING)
   percentage Decimal @db.Decimal(5,2)
   amount Decimal @db.Decimal(10,2)
+  paidAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
+}
+
+model Bonus {
+  id Int @id @default(autoincrement())
+  //
+  beneficiary Referral @relation(fields: [beneficiaryId], references: [id])
+  beneficiaryId Int
+  //
+  type BonusType
+  referenceId Int? // venta, meta, campaña, etc
+  amount Decimal
+  state BonusState @default(PENDING)
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+
+  @@index([beneficiaryId])
+  @@index([type])
 }

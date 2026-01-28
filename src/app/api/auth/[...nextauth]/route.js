@@ -19,11 +19,6 @@ export const authOptions = {
                         email: credentials.email
                     }
                 })
-                const referralFound = await db.referral.findFirst({
-                    where:{
-                        referredId: userFound.id
-                    }
-                })
                 if(!userFound) throw new Error(JSON.stringify({message: 'Usuario no encontrado'}))
                 const passwordMatch = await bcrypt.compare(credentials.password, userFound.password)
                 if(!passwordMatch) throw new Error(JSON.stringify({message: 'Contraseña incorrecta'}))
@@ -32,8 +27,7 @@ export const authOptions = {
                 return {
                     id: userFound.id,
                     name: userFound.username,
-                    email: userFound.email,
-                    referral: referralFound?.id ?? null
+                    email: userFound.email
                 }
             }
         })

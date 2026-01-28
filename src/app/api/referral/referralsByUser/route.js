@@ -25,7 +25,6 @@ export async function GET(request){
                 name: true,
                 phone: true,
                 identification: true,
-                address: true,
                 email: true,
                 state: true,
                 referral: {
@@ -34,7 +33,6 @@ export async function GET(request){
                         name: true,
                         phone: true,
                         identification: true,
-                        address: true,
                         email: true,
                         state: true,
                     }
