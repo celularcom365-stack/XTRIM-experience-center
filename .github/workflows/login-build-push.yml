@@ -24,5 +24,5 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest .
+          docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest .
           docker push ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest
