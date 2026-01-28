@@ -11,6 +11,7 @@ jobs:
       docker_password: ${{ secrets.DOCKER_PASSWORD }}
       docker_username: ${{ secrets.DOCKER_USERNAME }}
       repository_name: ${{ secrets.DOCKER_REPOSITORY_NAME }}
+      database_url: ${{secrets.DATABASE_URL}}
 
   ec2-cd-userdomain:
     needs: login-push-usercreate

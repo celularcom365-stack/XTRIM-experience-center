@@ -9,6 +9,8 @@ on:
         required: true
       repository_name:
         required: true
+      database_url:
+        required: true
 jobs:
   build-image:
     runs-on: ubuntu-latest
@@ -24,5 +26,5 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest .
+          docker build --build-arg DATABASE_URL=${{ secrets.database_url }} -t ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest .
           docker push ${{ secrets.docker_username }}/${{ secrets.repository_name }}:latest
