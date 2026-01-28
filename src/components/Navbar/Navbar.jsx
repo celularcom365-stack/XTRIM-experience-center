@@ -14,19 +14,14 @@ async function Navbar() {
             !session?.user ? (
                 <>
                     <nav className="flex justify-between items-center bg-fuchsia-800 text-white px-24 py-3">
-                    <h1 className="text-xl font-bold">XTRIM</h1>
+                    <a href="https://www.clubxtrim.com" className="text-xl font-bold hover:font-extrabold">XTRIM</a>
                     <ul className="flex gap-x-2">
-                        <li>
-                            <Link href="/">
-                            Inicio
-                            </Link>
-                        </li>
-                        <li>
+                        <li className="hover:font-bold">
                             <Link href="/auth/login">
                             Ingreso
                             </Link>
                         </li>
-                        <li>
+                        <li className="hover:font-bold">
                             <Link href="/auth/register">
                             Registro
                             </Link>

@@ -53,7 +53,7 @@ export async function POST(request) {
                     used: false
                 }
             })
-            const link = `http://localhost:3000/verify-email?token=${token}`;
+            const link = `https://app.clubxtrim.com/verify-email?token=${token}`;
             const message = `
             <h1>Hola 👋</h1>
             <p>Gracias por registrarte</p>
