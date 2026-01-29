@@ -22,7 +22,7 @@ function VerifyEmail(){
 
 
     return(
-        <div className="p-10 flex justify-center items-center text-white font-bold text-4xl">
+        <div className="pt-20 flex justify-center items-center text-white font-bold text-4xl">
             <p>{message}</p>
         </div>
     )

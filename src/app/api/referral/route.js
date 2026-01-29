@@ -75,6 +75,19 @@ export async function POST(request){
             }
         })
         const newReferralId = parseInt(newReferral.id)
+
+
+        if(referralUserId){
+            const bonus = await db.bonus.create({
+                data:{
+                    type: "WELCOME",
+                    beneficiaryId: newReferralId,
+                    amount:parseInt(10),
+                    state: "GRANTED"
+                }
+            })
+        }
+
         const newTreeFirstRegister = await db.tree.create({
             data:{
                 ancestorId: newReferralId,

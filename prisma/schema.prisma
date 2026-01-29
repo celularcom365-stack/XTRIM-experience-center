@@ -35,8 +35,10 @@ enum UserState {
 }
 
 enum ReferralState {
-  PENDING
-  ACTIVE
+  ENTERED
+  VERIFYING
+  APPROVED
+  INSTALLED
   REJECTED
 }
 
@@ -101,7 +103,7 @@ model Referral {
   latitude String
   longitude String
   email String @unique
-  state ReferralState @default(PENDING)
+  state ReferralState @default(ENTERED)
   referredId Int? @unique
   parentId Int?
   createdAt DateTime @default(now())

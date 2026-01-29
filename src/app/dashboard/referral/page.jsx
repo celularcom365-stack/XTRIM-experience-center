@@ -13,12 +13,11 @@ const Map = dynamic(() => import("@/components/Map/Map"), {
 
 
 function Referral() {
-    const {handleSubmit, register, formState: {errors}, setValue} = useForm()
+    const {handleSubmit, register, formState: {errors}, setValue, reset} = useForm()
 
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(true)
     const [loadingForm, setLoadingForm] = useState(false)
-    const [email, setEmail] = useState(null)
     const [alert, setAlert] = useState(null)
 
     const onSubmit = handleSubmit( async (data) => {
@@ -33,11 +32,13 @@ function Referral() {
         })
         const parseRes = await res.json()
         setAlert(parseRes)
+        if(parseRes.type == "success"){
+            reset()
+        }
         setLoadingForm(false)
     })
 
     useEffect(() => {
-        setEmail(null)
         const checkReferral = async () => {
             const res = await fetch(`/api/referral`,{
                 method: 'GET',
@@ -48,7 +49,6 @@ function Referral() {
             const data = await res.json()
             if(data.message){
                 setOpen(true)
-                setEmail(data.email)
                 setValue("email", data.email)
             }
             setLoading(false)

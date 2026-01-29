@@ -7,7 +7,7 @@ import { useState } from 'react'
 import Link from 'next/link';
 
 function LoginPage() {
-    const {register, handleSubmit, formState:{errors}} = useForm()
+    const {register, handleSubmit, formState:{errors}, reset} = useForm()
 
     const router = useRouter()
 
@@ -22,9 +22,9 @@ function LoginPage() {
             password: data.password,
             redirect: false
         })
-        console.log(res.error)
         if(!res.ok){
             setError(JSON.parse(res.error).message)
+            reset()
             setLoading(false)
         }else{
             setLoading(false)

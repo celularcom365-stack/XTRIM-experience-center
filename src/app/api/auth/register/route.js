@@ -42,37 +42,38 @@ export async function POST(request) {
             }
         })
 
-        if(newUser){
-            const token = crypto.randomBytes(32).toString("hex");
+        if(!newUser){
+            return NextResponse.json({message: "Error al crear el usuario", type: "error"}, {status:401})
+        }
+        const token = crypto.randomBytes(32).toString("hex");
 
-            const verify = await db.emailVerification.create({
+        const verify = await db.emailVerification.create({
+            data:{
+                userId: newUser.id,
+                token: token,
+                expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+                used: false
+            }
+        })
+        const link = `https://app.clubxtrim.com/verify-email?token=${token}`;
+        const message = `
+        <h1>Hola 👋</h1>
+        <p>Gracias por registrarte</p>
+        <p>Haz clic en el siguiente enlace para confirmar tu email:</p>
+        <a href="${link}">Confirmar cuenta</a>
+        <p>Este enlace expira en 1 hora</p>
+        `
+        const res = await sendVerificationMail(data.email, link, message);
+
+        if(referralFoundByEmail){
+            await db.referral.update({
+                where:{
+                    email: data.email
+                },
                 data:{
-                    userId: newUser.id,
-                    token: token,
-                    expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-                    used: false
+                    referredId: parseInt(newUser.id)
                 }
             })
-            const link = `https://app.clubxtrim.com/verify-email?token=${token}`;
-            const message = `
-            <h1>Hola 👋</h1>
-            <p>Gracias por registrarte</p>
-            <p>Haz clic en el siguiente enlace para confirmar tu email:</p>
-            <a href="${link}">Confirmar cuenta</a>
-            <p>Este enlace expira en 1 hora</p>
-            `
-            const res = await sendVerificationMail(data.email, link, message);
-
-            if(referralFoundByEmail){
-                await db.referral.update({
-                    where:{
-                        email: data.email
-                    },
-                    data:{
-                        referredId: parseInt(newUser.id)
-                    }
-                })
-            }
         }
 
         const {password: _, ...user} = newUser
