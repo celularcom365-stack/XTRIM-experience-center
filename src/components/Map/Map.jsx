@@ -1,11 +1,18 @@
 "use client"
 
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "leaflet/dist/leaflet.css"
 
 function Map({ setValue }) {
   const [position, setPosition] = useState(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null 
 
   const LocationMarker = () => {
     useMapEvents({

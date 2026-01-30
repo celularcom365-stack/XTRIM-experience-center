@@ -34,13 +34,13 @@ function LoginPage() {
     })
 
     return(
-        <div className='min-h-screen flex items-center justify-center px-4'>
+        <div className='min-h-screen flex items-start sm:items-center justify-center px-4 pt-20'>
             <form className="w-full max-w-md px-4 sm:px-6 md:px-0" onSubmit={onSubmit}>
                 {error && (
                     <p className='bg-red-500 text-lg text-white p-3'>{error}</p>
                 )}
 
-                <h1 className="text-[#ffcf00] font-bold text-3xl sm:text-4xl mb-4">Ingreso</h1>
+                <h1 className="text-[#ffcf00] font-bold text-4xl mb-4">Ingreso</h1>
                 <label htmlFor="email" className='text-slate-200 mb-2 block text-sm'>Correo Electrónico:</label>
                 <input type="email"
                 {...register("email",{
@@ -77,7 +77,7 @@ function LoginPage() {
                         </span>
                     )
                 }
-                <p className='text-sm text-white font-light'><Link href="/recover-password/">Olvidaste la contraseña?</Link></p>
+                <p className='text-sm text-white font-light'><Link href="/auth/recover-password/">Olvidaste la contraseña?</Link></p>
                 
                 {
                     loading ? (

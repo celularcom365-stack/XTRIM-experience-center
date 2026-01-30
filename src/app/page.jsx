@@ -1,5 +1,9 @@
+import Navbar
+ from "@/components/Navbar/Navbar"
 function Page() {
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen flex items-center justify-center px-4 bg-[#773089]">
       <div className="text-center">
         <img
@@ -13,6 +17,7 @@ function Page() {
         </p>
       </div>
     </div>
+    </>
   )
 }
 

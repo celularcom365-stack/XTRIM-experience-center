@@ -47,7 +47,7 @@ function RegisterPage() {
                     <p className={`text-white ${alert.type == "success" ? "bg-fuchsia-700" : "bg-red-500"} text-lg p-3`}>{alert.message}</p>
                 )}
 
-                <h1 className="text-slate-200 font-bold text-4xl mb-4">Registro</h1>
+                <h1 className="text-[#ffcf00] font-bold text-4xl mb-4">Registro</h1>
                 <label htmlFor="username" className='text-slate-200 mb-2 block text-sm'>Nombre de usuario:</label>
                 <input type="text"
                 {...register("username",{
@@ -181,7 +181,7 @@ function RegisterPage() {
                 {loading?(<div className="flex justify-center mb-3">
                     <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
                 </div>):(<button
-                className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-4 text-base active:scale-95 transition'>
+                className='w-full bg-[#ffcf00] font-bold text-[#773089] p-3 rounded-lg mt-4 text-base active:scale-95 transition'>
                     Registrarse
                 </button>)}
             </form>

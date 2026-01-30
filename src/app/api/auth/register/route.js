@@ -81,7 +81,7 @@ export async function POST(request) {
         })
 
         
-        const link = `https://app.clubxtrim.com/verify-email?token=${token}`;
+        const link = `https://app.clubxtrim.com/auth/verify-email?token=${token}`;
         const message = `
         <h1>Hola 👋</h1>
         <p>Gracias por registrarte</p>
@@ -91,7 +91,7 @@ export async function POST(request) {
         `
         await sendVerificationMail(data.email, link, message);
 
-        return NextResponse.json({message: "Usuario creado exitosamente", type: "success"}, {status:201})
+        return NextResponse.json({message: "Usuario creado, revisa tu correo", type: "success"}, {status:201})
     }catch(error){
         return NextResponse.json({message: error.message}, {status: 500})
     }

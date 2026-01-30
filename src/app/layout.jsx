@@ -1,6 +1,5 @@
-import { Geist, Geist_Mono, Ubuntu } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
-import Nabvar from "@/components/Navbar/Navbar";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -26,7 +25,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${ubuntu.className} antialiased`}
       >
-        <Nabvar/>
         {children}
       </body>
     </html>

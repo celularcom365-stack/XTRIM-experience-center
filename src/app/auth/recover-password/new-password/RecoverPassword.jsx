@@ -41,13 +41,13 @@ function RecoverPassword() {
     })
 
     return(
-        <div className='h-[calc(100vh-7rem)] flex justify-center items-center'>
-            <form className="w-1/4" onSubmit={onSubmit}>
+        <div className='min-h-screen flex items-start sm:items-center justify-center px-4 pt-20'>
+            <form className="w-full max-w-md px-4 sm:px-6 md:px-0" onSubmit={onSubmit}>
                 {alert && (
                     <p className={`${alert.type === "success" ? "bg-fuchsia-700" : "bg-red-500"} text-lg text-white p-3`}>{alert.message}</p>
                 )}
 
-                <h1 className="text-slate-200 font-bold text-3xl mb-4">Nueva Contraseña:</h1>
+                <h1 className="text-[#ffcf00] font-bold text-4xl mb-4">Nueva Contraseña</h1>
                 <label htmlFor="password" className='text-slate-200 mb-2 block text-sm'>Nueva Contraseña:</label>
                 <input type="password"
                 {...register("password",{
@@ -56,7 +56,7 @@ function RecoverPassword() {
                         message: "* La contraseña es obligatoria"
                     }
                 })}
-                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full"
+                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
                 placeholder='********'
                 />
                 {
@@ -75,7 +75,7 @@ function RecoverPassword() {
                         message: "* La contraseña es obligatoria"
                     }
                 })}
-                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full"
+                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
                 placeholder='********'
                 />
                 {
@@ -86,7 +86,7 @@ function RecoverPassword() {
                     )
                 }
 
-                <button className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-2'>Actualizar</button>
+                <button className='w-full bg-[#ffcf00] font-bold text-[#773089] p-3 rounded-lg mt-2'>Actualizar</button>
             </form>
         </div>
     )

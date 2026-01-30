@@ -20,6 +20,8 @@ function Referral() {
     const [loadingForm, setLoadingForm] = useState(false)
     const [alert, setAlert] = useState(null)
 
+    const inputStyle = "block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+
     const onSubmit = handleSubmit( async (data) => {
         setAlert(null)
         setLoadingForm(true)
@@ -63,7 +65,7 @@ function Referral() {
             ):(
                 <>
                 <Overlay open={open} onClose={() => setOpen(false)}/>
-                <div className="flex items-center">
+                <div className="flex items-start sm:items-center">
                     <form className="w-full max-w-6xl mx-auto bg-white p-6 rounded-xl shadow" onSubmit={onSubmit}>
 
                         {alert && (
@@ -75,7 +77,7 @@ function Referral() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
                             <div className="space-y-2">
                                 <label htmlFor="" className="mt-2 block w-full font-semibold">Nombre:</label>
-                                <input type="text" className="block w-full  rounded bg-gray-50"
+                                <input type="text" className={inputStyle}
                                 {...register("name",{
                                     required:{
                                         value: true,
@@ -90,7 +92,7 @@ function Referral() {
                                     )
                                 }
                                 <label htmlFor="" className="mt-2 block w-full font-semibold">Correo:</label>
-                                <input type="email" className="block w-full  rounded bg-gray-50"
+                                <input type="email" className={inputStyle}
                                 {...register("email", {
                                     required:{
                                         value:true,
@@ -105,7 +107,7 @@ function Referral() {
                                     )
                                 }
                                 <label htmlFor="" className="mt-2 block w-full font-semibold">Cedula / Ruc:</label>
-                                <input type="text" className="block w-full  rounded bg-gray-50"
+                                <input type="text" className={inputStyle}
                                 {...register("identification", {
                                     required:{
                                         value:true,
@@ -120,7 +122,7 @@ function Referral() {
                                     )
                                 }
                                 <label htmlFor="" className="mt-2 block w-full font-semibold">Telefono:</label>
-                                <input type="text" className="block w-full  rounded bg-gray-50"
+                                <input type="text" className={inputStyle}
                                 {...register("phone", {
                                     required:{
                                         value:true,

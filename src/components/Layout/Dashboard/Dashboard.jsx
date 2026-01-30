@@ -20,12 +20,12 @@ function Dashboard({children}) {
                 <Menu />
                 </button>
                 <div className="hidden lg:block flex-1" />
-                <button className="bg-amber-400 font-semibold px-4 py-2 rounded-md mt-2" onClick={signOut}>Salir</button>
+                <button className="bg-[#ffcf00] text-[#773089] font-semibold px-4 py-2 rounded-md mt-2" onClick={signOut}>Salir</button>
             </div>
 
             <div className="flex h-screen overflow-hidden">
                 <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-                <main className="flex-1 overflow-y-auto p-6 bg-fuchsia-900">
+                <main className="flex-1 overflow-y-auto p-6 bg-[#773089]">
                     <div className="bg-white rounded-xl p-6 min-h-full">
                         {children}
                     </div>

@@ -14,9 +14,9 @@ function Sidebar({ open, setOpen }) {
         clsx(
             "block px-3 py-2 rounded-md mt-2",
             "transition-all duration-200 ease-in-out",
-            "hover:bg-fuchsia-600",
+            "hover:bg-[#5A2C63]",
             pathname === path
-            ? "bg-fuchsia-800 text-white"
+            ? "bg-[#5A2C63] text-white"
             : "text-white"
         )
     return(
@@ -29,7 +29,7 @@ function Sidebar({ open, setOpen }) {
         )}
         <aside className={clsx(
         "fixed pt-5 lg:static z-50",
-          "h-full w-64 bg-fuchsia-900 text-white",
+          "h-full w-64 bg-[#773089] text-white",
           "transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "-translate-x-full",
           "lg:translate-x-0"
