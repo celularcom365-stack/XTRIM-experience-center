@@ -82,8 +82,7 @@ export async function POST(request){
                 data:{
                     type: "WELCOME",
                     beneficiaryId: newReferralId,
-                    amount:parseInt(10),
-                    state: "GRANTED"
+                    amount:parseInt(10)
                 }
             })
         }

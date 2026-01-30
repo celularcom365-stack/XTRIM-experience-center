@@ -15,13 +15,19 @@ datasource db {
 
 ////////////////////////////////
 
+enum PaymentMethod {
+  BANK_TRANSFER
+  CASH
+  WALLET
+}
+
 enum BonusType {
   WELCOME
   ANNIVERSARY
   REWARD
 }
 
-enum BonusState {
+enum PaymentState {
   PENDING
   GRANTED
   PAID
@@ -42,11 +48,20 @@ enum ReferralState {
   REJECTED
 }
 
-enum CommissionState {
-  PENDING
-  PAID
-  CANCELLED
+enum NotificationType {
+  COMMISSION_CREATED
+  COMMISSION_PAID
+  BONUS_GRANTED
+  PAYMENT_FAILED
+  SYSTEM
+  REFFERAL_STATUS
 }
+
+enum BankAccountType {
+  SAVINGS
+  CHECKING
+}
+
 ///////////////////////////////
 
 model User {
@@ -55,6 +70,8 @@ model User {
   referredUser Referral?
 
   emailVerification EmailVerification[]
+
+  terms TermsAcceptance?
   //
   email String @unique
   password String
@@ -64,6 +81,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
+
+  @@index([state])
+
 }
 
 model EmailVerification{
@@ -92,10 +112,13 @@ model Referral {
 
   commissions Commission[] @relation("beneficiary")
 
-  commission Commission[] @relation("referral")
-
   bonus Bonus[]
 
+  bankAccounts BankAccount[]
+
+  notifications Notification[]
+
+  payment Payment[]
   //
   name String
   identification String
@@ -109,6 +132,9 @@ model Referral {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
+
+  @@index([state])
+
 }
 
 model Tree {
@@ -125,38 +151,136 @@ model Tree {
   @@id([ancestorId, descendantId])
 }
 
+model Notification {
+  id Int @id @default(autoincrement())
+  //
+  referral Referral? @relation(fields: [referralId], references: [id])
+  //
+  title String
+  message String
+  type NotificationType
+  read Boolean @default(false)
+  referralId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+}
+
+model BankAccount {
+  id Int @id @default(autoincrement())
+  //
+  referral Referral @relation(fields: [referralId], references: [id])
+  bonus Bonus[]
+  commission Commission[]
+  payment Payment[]
+  //
+  bankName String
+  accountType BankAccountType
+  accountNumber String
+  holderName String?
+  holderDocument String
+  main Boolean @default(false)
+  verified Boolean @default(false)
+  referralId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+
+  @@unique([referralId, main])
+  @@index([referralId])
+}
+
+model TermsAcceptance{
+  id Int @id @default(autoincrement())
+  //
+  user User @relation(fields: [userId], references: [id])
+  //
+  userId Int @unique
+  termsVersion String
+  privacyVersion String
+  ipAddress String
+  userAgent String
+  acceptedAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visible Boolean @default(true)
+  @@index([userId])
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+  //
+  referral Referral @relation(fields: [referralId], references: [id])
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+
+  referralId Int
+  bankAccountId Int
+
+  commissions Commission[]
+  bonuses Bonus[]
+  //
+  totalAmount Decimal @db.Decimal(10,2)
+  status PaymentState @default(PENDING)
+  method PaymentMethod
+  reference String?
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([referralId])
+  @@index([status])
+}
+
 model Commission {
   id Int @id @default(autoincrement())
   //
-  referral Referral @relation("referral",fields: [referralId], references: [id])
   beneficiary Referral @relation("beneficiary", fields: [beneficiaryId], references: [id])
-  //
-  referralId Int
+  bankAccount BankAccount? @relation(fields: [bankAccountId], references: [id])
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
   beneficiaryId Int
-  state CommissionState @default(PENDING)
+  bankAccountId Int?
+  paymentId Int?
+  //
+  state PaymentState @default(PENDING)
   percentage Decimal @db.Decimal(5,2)
   amount Decimal @db.Decimal(10,2)
+  reference String?
   paidAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
+
+  @@index([state])
+  @@index([paidAt])
+  @@index([beneficiaryId])
 }
 
 model Bonus {
   id Int @id @default(autoincrement())
   //
   beneficiary Referral @relation(fields: [beneficiaryId], references: [id])
+  bankAccount BankAccount? @relation(fields: [bankAccountId], references: [id])
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
   beneficiaryId Int
+  bankAccountId Int?
+  paymentId Int?
   //
   type BonusType
-  referenceId Int? // venta, meta, campaña, etc
   amount Decimal
-  state BonusState @default(PENDING)
+  state PaymentState @default(PENDING)
+  reference String?
   paidAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   visible Boolean @default(true)
 
-  @@index([beneficiaryId])
   @@index([type])
+  @@index([state])
+  @@index([paidAt])
+  @@index([beneficiaryId])
 }

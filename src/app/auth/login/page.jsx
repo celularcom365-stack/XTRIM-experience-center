@@ -40,7 +40,7 @@ function LoginPage() {
                     <p className='bg-red-500 text-lg text-white p-3'>{error}</p>
                 )}
 
-                <h1 className="text-slate-200 font-bold text-3xl sm:text-4xl mb-4">Ingreso</h1>
+                <h1 className="text-[#ffcf00] font-bold text-3xl sm:text-4xl mb-4">Ingreso</h1>
                 <label htmlFor="email" className='text-slate-200 mb-2 block text-sm'>Correo Electrónico:</label>
                 <input type="email"
                 {...register("email",{
@@ -85,7 +85,7 @@ function LoginPage() {
                             <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
                         </div>
                     ):(
-                        <button className='w-full bg-amber-400 font-bold text-white p-3 rounded-lg mt-4 text-base active:scale-95 transition'>Ingresar</button>
+                        <button className='w-full bg-[#ffcf00] font-bold text-[#773089] p-3 rounded-lg mt-4 text-base active:scale-95 transition'>Ingresar</button>
                     )
                 }
             </form>

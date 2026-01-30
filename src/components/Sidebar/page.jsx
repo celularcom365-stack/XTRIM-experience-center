@@ -69,6 +69,9 @@ function Sidebar({ open, setOpen }) {
                         <Link href="/dashboard/referral" className={linkClass("/dashboard/referral")}>Referidos</Link>
                     </li>
                     <li className="mt-2">
+                        <Link href="/dashboard/commission" className={linkClass("/dashboard/commission")}>Comisiones</Link>
+                    </li>
+                    <li className="mt-2">
                         <Link href="/dashboard/about" className={linkClass("/dashboard/about")}>Acerca de</Link>
                     </li>
                 </ul>

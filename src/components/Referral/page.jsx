@@ -9,11 +9,26 @@ function Referral({referrals}){
     const [selectedReferral, setSelectedReferral] = useState(null)
 
     const stateColors = {
-    ENTERED:"bg-gray-500",
-    VERIFYING:"bg-yellow-400",
-    APPROVED:"bg-blue-500",
-    INSTALLED:"bg-green-500",
-    REJECTED:"bg-red-500"
+        ENTERED:{
+            title:"Ingresado",
+            color:"bg-gray-500"
+        },
+        VERIFYING:{
+            title:"Verificando",
+            color:"bg-yellow-400"
+        },
+        APPROVED:{
+            title:"Aprovado",
+            color:"bg-blue-500"
+        },
+        INSTALLED:{
+            title:"Instalado",
+            color:"bg-green-500"
+        },
+        REJECTED:{
+            title:"Rechazado",
+            color:"bg-red-500"
+        }
     }
 
 
@@ -45,8 +60,8 @@ function Referral({referrals}){
                                         </div>
                                     </div>
 
-                                    <span className={clsx("text-white text-xs px-3 py-1 rounded-full self-start sm:self-center", stateColors[referral.state] ?? "bg-gray-400")}>
-                                        {referral.state}
+                                    <span className={clsx("text-white text-xs px-3 py-1 rounded-full self-start sm:self-center", stateColors[referral.state].color ?? "bg-gray-400")}>
+                                        {stateColors[referral.state].title}
                                     </span>
                                 </div>
                                 <div className="flex gap-1 ml-auto">

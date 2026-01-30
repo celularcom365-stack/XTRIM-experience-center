@@ -40,7 +40,7 @@ function RegisterPage() {
     })
 
     return(
-        <div className='min-h-screen flex items-center justify-center px-4'>
+        <div className='min-h-screen flex items-start sm:items-center justify-center px-4 pt-20'>
             <form className="w-full max-w-md px-4 sm:px-6 md:px-0" onSubmit={onSubmit}>
 
                 {alert && (
@@ -120,6 +120,64 @@ function RegisterPage() {
                         </span>
                     )
                 }
+
+                <div className="mt-4">
+                    <label className="flex items-start gap-2 text-sm text-slate-200">
+                        <input
+                        type="checkbox"
+                        {...register("terms", {
+                            required: "Debes aceptar los términos y condiciones"
+                        })}
+                        className="mt-1"
+                        />
+                        <span>
+                        Acepto los{" "}
+                        <a
+                            href="/terminos"
+                            target="_blank"
+                            className="text-[#ffcf00] underline"
+                        >
+                            Términos y Condiciones
+                        </a>
+                        </span>
+                    </label>
+
+                {errors.terms && (
+                    <p className="text-yellow-300 text-sm mt-1">
+                    {errors.terms.message}
+                    </p>
+                )}
+                </div>
+
+                <div className="mt-3">
+                <label className="flex items-start gap-2 text-sm text-slate-200">
+                    <input
+                    type="checkbox"
+                    {...register("privacy", {
+                        required: "Debes aceptar la política de protección de datos"
+                    })}
+                    className="mt-1"
+                    />
+                    <span>
+                    Acepto la{" "}
+                    <a
+                        href="/privacidad"
+                        target="_blank"
+                        className="text-[#ffcf00] underline"
+                    >
+                        Política de Protección de Datos
+                    </a>
+                    </span>
+                </label>
+
+                {errors.privacy && (
+                    <p className="text-yellow-300 text-sm mt-1">
+                    {errors.privacy.message}
+                    </p>
+                )}
+                </div>
+
+
                 {loading?(<div className="flex justify-center mb-3">
                     <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
                 </div>):(<button

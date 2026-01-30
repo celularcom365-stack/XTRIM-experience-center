@@ -19,7 +19,7 @@ function ContentReferralState({ referral, onClose }) {
     },
     {
         key: "APPROVED",
-        label: "Aprovado",
+        label: "Aprobado",
         color: "bg-blue-500",
         description: "El referido cumple con los requerimientos."
     },
