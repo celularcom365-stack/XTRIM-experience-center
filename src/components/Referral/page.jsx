@@ -65,9 +65,6 @@ function Referral({referrals}){
                                     </span>
                                 </div>
                                 <div className="flex gap-1 ml-auto">
-                                    <button className="material-symbols-outlined text-white bg-yellow-300 p-2 rounded-full ml-4 cursor-pointer hover:text-gray-800">
-                                    attach_money
-                                    </button>
                                     <button onClick={() => setSelectedReferral(referral)} className="material-symbols-outlined text-white bg-gray-400 p-2 rounded-full ml-4 cursor-pointer hover:text-gray-800">
                                     info
                                     </button>

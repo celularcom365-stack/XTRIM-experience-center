@@ -133,7 +133,7 @@ function RegisterPage() {
                         <span>
                         Acepto los{" "}
                         <a
-                            href="/terminos"
+                            href="/auth/terms"
                             target="_blank"
                             className="text-[#ffcf00] underline"
                         >
@@ -161,7 +161,7 @@ function RegisterPage() {
                     <span>
                     Acepto la{" "}
                     <a
-                        href="/privacidad"
+                        href="/auth/dataProtection"
                         target="_blank"
                         className="text-[#ffcf00] underline"
                     >

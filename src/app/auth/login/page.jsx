@@ -7,7 +7,7 @@ import { useState } from 'react'
 import Link from 'next/link';
 
 function LoginPage() {
-    const {register, handleSubmit, formState:{errors}, reset} = useForm()
+    const {register, handleSubmit, formState:{errors}, setValue} = useForm()
 
     const router = useRouter()
 
@@ -15,6 +15,7 @@ function LoginPage() {
     const [loading, setLoading] = useState(false)
 
     const onSubmit = handleSubmit(async (data) => {
+        console.log(data)
         setLoading(true)
 
         const res = await signIn("credentials", {
@@ -24,7 +25,8 @@ function LoginPage() {
         })
         if(!res.ok){
             setError(JSON.parse(res.error).message)
-            reset()
+            setValue("email", "") 
+            setValue("password", "") 
             setLoading(false)
         }else{
             setLoading(false)

@@ -4,6 +4,14 @@ function Payment({payments}){
             WELCOME:{
                 message: "Bienvenida"
             }
+        },
+        commission:{
+            100:{
+                message: "Directo",
+            },
+            25:{
+                message: "Indirecto"
+            }
         }
     }
     const statusPayments= {
@@ -92,13 +100,16 @@ function Payment({payments}){
                 </div>
 
                 {!payments.bonus && (
-                <p className="text-gray-500">Cargando comisiones...</p>
+                <p className="text-gray-500">Cargando bonos...</p>
                 )}
                 {payments.bonus?.length === 0 && (
-                <p className="text-gray-500">No tienes comisiones aún</p>
+                <p className="text-gray-500">No tienes bonos aún</p>
                 )}
 
             </div>
+
+
+
 
             <div>
                 <h1 className="text-2xl font-bold text-gray-800">
@@ -106,25 +117,25 @@ function Payment({payments}){
                 </h1>
 
                 <div className="grid gap-4 md:hidden">
-                {payments.commissions?.map((bonus) => (
+                {payments.commissions?.map((commission) => (
                     <div
-                    key={bonus.id}
+                    key={commission.id}
                     className="rounded-xl border p-4 shadow-sm bg-white"
                     >
                     <div className="flex justify-between items-center mb-2">
                         <span className="font-semibold">
-                        $ {bonus.amount}
+                        $ {commission.amount}
                         </span>
                         <span
-                        className={`${statusPayments[bonus.state].color} text-white text-sm px-3 py-1 rounded-full `}
+                        className={`${statusPayments[commission.state].color} text-white text-sm px-3 py-1 rounded-full `}
                         >
-                        {statusPayments[bonus.state].message}
+                        {statusPayments[commission.state].message}
                         </span>
                     </div>
 
                     <div className="text-sm text-gray-600 space-y-1">
-                        <p>Tipo: {typePayments.bonus[bonus.type].message}</p>
-                        <p>Asignado: {new Date(bonus.createdAt).toLocaleDateString()}</p>
+                        <p>Tipo: {typePayments.commission[commission.percentage].message}</p>
+                        <p>Asignado: {new Date(commission.createdAt).toLocaleDateString()}</p>
                     </div>
                     </div>
                 ))}
@@ -147,7 +158,7 @@ function Payment({payments}){
                             <td className="p-3 font-semibold">
                                 $ {payment.amount}
                             </td>
-                            <td className="p-3">{typePayments.bonus[payment.type].message}</td>
+                            <td className="p-3">{typePayments.commission[payment.percentage].message}</td>
                             <td className="p-3">
                                 {new Date(payment.createdAt).toLocaleDateString()}
                             </td>
