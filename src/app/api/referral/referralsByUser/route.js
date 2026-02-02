@@ -42,7 +42,6 @@ export async function GET(request){
                 }
             }
         })
-        console.log(referralsXUser)
         if(referralsXUser == null){
             return NextResponse.json({message : "Referrals not found"},{ status: 400 })
         }

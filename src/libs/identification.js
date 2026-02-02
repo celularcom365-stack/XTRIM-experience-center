@@ -14,7 +14,7 @@ export function verify(identification) {
     const tercerDigito = parseInt(cedula[2], 10);
 
     if (provincia < 1 || provincia > 24) return false;
-    if (tercerDigito < 0 || tercerDigito > 5) return false;
+    if (tercerDigito < 0 || tercerDigito > 6) return false;
 
     const coeficientes = [2,1,2,1,2,1,2,1,2];
     const digitoVerificador = parseInt(cedula[9], 10);

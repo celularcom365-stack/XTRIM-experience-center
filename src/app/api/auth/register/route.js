@@ -74,6 +74,13 @@ export async function POST(request) {
                         referredId: parseInt(newUser.id)
                     }
                 })
+                await tx.bonus.create({
+                    data:{
+                        type: "WELCOME",
+                        beneficiaryId: referralFoundByEmail.id,
+                        amount:parseInt(10)
+                    }
+                })
             }
 
             return {newUser}
