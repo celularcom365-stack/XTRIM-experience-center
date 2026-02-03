@@ -13,9 +13,9 @@ function LoginPage() {
 
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     const onSubmit = handleSubmit(async (data) => {
-        console.log(data)
         setLoading(true)
 
         const res = await signIn("credentials", {
@@ -62,16 +62,22 @@ function LoginPage() {
                     )
                 }
                 <label htmlFor="password" className='text-slate-200 mb-2 block text-sm'>Contraseña:</label>
-                <input type="password"
-                {...register("password",{
-                    required: {
-                        value: true,
-                        message: "* La contraseña es obligatoria"
-                    }
-                })}
-                className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
-                placeholder='********'
-                />
+                <div className="relative">
+                    <input type={showPassword ? ("text"):("password")}
+                    {...register("password",{
+                        required: {
+                            value: true,
+                            message: "* La contraseña es obligatoria"
+                        }
+                    })}
+                    className="p-3 rounded block mb-2 bg-yellow-100 text-slate-950 w-full text-sm sm:text-base"
+                    placeholder='********'
+                    />
+
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-700 hover:text-slate-900">
+                        {showPassword ? "visibility_off" : "visibility"}
+                    </button>
+                </div>
                 {
                     errors.password && (
                         <span className='text-yellow-300 text-sm'>

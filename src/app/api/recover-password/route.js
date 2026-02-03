@@ -42,7 +42,6 @@ export async function POST(request){
                 used: false
             }
         })
-        console.log(foundUser)
         const link = `https://app.clubxtrim.com/auth/recover-password/new-password?token=${token}`;
         const message = `
         <h1>Hola ${foundUser.referredUser ? `${foundUser.referredUser.name}` : ""}👋</h1>

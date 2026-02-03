@@ -5,7 +5,6 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const token = searchParams.get("token");
 
-  console.log(token)
   const record = await db.emailVerification.findFirst({
     where: { 
         token,
